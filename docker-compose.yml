@@ -1,40 +1,37 @@
 version: '3.8'
-
 services:
-    dev:
-        container_name: nestjs_api_dev
-        image: nestjs-api-dev:1.0.0
+    api:
         build:
+            dockerfile: Dockerfile
             context: .
             target: development
-            dockerfile: ./Dockerfile
+        depends_on:
+            - mariadb
+        environment:
+            # localhost
+            DATABASE_URL: 'mariadb'
+            NODE_ENV: development
+            PORT: 3000
         command: npm run start:debug
+        ports:
+            - "4000:8080"
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+    mariadb:
+        image: mariadb:latest
         ports:
             - "3000:3000"
             - "9229:9229"
-        networks:
-            - nesjs-network
-        volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
-        restart: unless-stopped
-    prod:
-        container_name: nestjs_api_prod
-        image: nestjs-api-prod:1.0.0
-        build:
-            context: .
-            target: production
-            dockerfile: ./Dockerfile
-        command: npm run start:prod
+        environment:
+            MYSQL_DATABASE: "alachiq"
+            MYSQL_USER: "root"
+            MYSQL_PASSWORD: "MyNewPass"
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
         ports:
-            - 3000:3000
-            - 9229:9229
-        networks:
-            - nesjs-network
-        volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
-        restart: unless-stopped
-
-networks:
-    nesjs-network:
+            - "8081:80"
+        environment:
+            - PMA_ARBITRARY=1
