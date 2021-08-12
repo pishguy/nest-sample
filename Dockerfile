@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install glob rimraf
 
-RUN npm install
+RUN npm install #--only=development
 
 COPY . .
 
@@ -28,4 +28,3 @@ COPY . .
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/main"]
-
