@@ -1,7 +1,8 @@
-`import 'dotenv/config';
+//import 'dotenv/config';
 import {Logger} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
+import {TypeOrmModule} from '@nestjs/typeorm';
 const port = process.env.PORT || 3000;
 
 async function bootstrap() {
@@ -12,4 +13,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-`
